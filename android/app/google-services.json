@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "851830409444",
+    "project_id": "sohbet-f963a",
+    "storage_bucket": "sohbet-f963a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851830409444:android:496da7d3b62d03793284f1",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCATibS2uuJT_wksGLlfqp_pg_u_OEaMUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
