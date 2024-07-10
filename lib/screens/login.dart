@@ -101,7 +101,8 @@ class _LoginState extends State<Login> with ValidateMixin {
                     ),
                   ),
                 ),
-              )
+              ),
+              ElevatedButton(onPressed: ()async => await authService.googleSignIn(context), child: const Text("Google ile giriş yap"))
             ],
           ),
         ),

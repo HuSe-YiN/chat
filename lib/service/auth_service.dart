@@ -1,6 +1,10 @@
-import 'package:chat/service/firestore_service.dart';
+import 'package:chat/screens/home_page.dart';
+import 'package:chat/screens/login.dart';
+import 'package:chat/service/firestore_user_service.dart';
+import 'package:chat/util/extensions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/user_model.dart';
 
@@ -35,7 +39,7 @@ class AuthService {
     );
     if (userCredential.user != null) {
       _currentUser = MyUser.fromFirebaseUser(userCredential.user!);
-      firestoreService.addUser(_currentUser!);
+      fUserService.addUser(_currentUser!);
     }
   }
 
@@ -49,13 +53,41 @@ class AuthService {
         password: password,
       );
       _currentUser = MyUser.fromFirebaseUser(user.user!);
-    } catch ( e ) {
+    } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  Future<void> logOut() async {
-    return await _firebaseAuth.signOut();
+  Future<void> logOut(BuildContext context) async {
+    await _firebaseAuth.signOut();
+
+    GoogleSignIn().signOut();
+    if (context.mounted) {
+      context.pushAndRemoveUntil(const Login());
+    }
+  }
+
+  Future googleSignIn(BuildContext context) async {
+    final GoogleSignInAccount? googleUser;
+    try {
+      googleUser = await GoogleSignIn().signIn();
+    } catch (e) {
+      return;
+    }
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+      final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+
+      _currentUser = MyUser.fromFirebaseUser(userCredential.user!);
+      fUserService.addUser(_currentUser!);
+
+      if (context.mounted) {
+        context.pushAndRemoveUntil(const HomePage());
+      }
+    }
   }
 }
 
